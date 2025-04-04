@@ -1,0 +1,1 @@
+# Laravel AI Analytics Dashboard
