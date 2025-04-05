@@ -1,91 +1,181 @@
 # 🚀 AI-Powered SQL Query System
 
+A natural language to SQL query converter using Laravel, FastAPI, and OpenAI.
+
 ## 🔄 Flow & How It Works
 
 ### 1️⃣ User Interaction
-- The user logs into the dashboard.
-- They type a question like:
-  - 👉 "What were the top 5 selling products last month?"
-- The request is sent to the Laravel backend.
+- User enters a natural language question in the React interface
+- Example: "How many employees do we have?"
+- The system automatically detects database schema
 
 ### 2️⃣ Processing the Query (Backend + AI)
-- Laravel forwards the request to the FastAPI microservice.
-- FastAPI processes the request using OpenAI (GPT-4, etc.).
-- The AI converts the question into an optimized SQL query.
+- Laravel backend captures the request and database schema
+- Sends both query and schema to FastAPI microservice
+- FastAPI processes the request using OpenAI (GPT-4)
+- AI generates SQL query based on actual database structure
 
-### 3️⃣ Fetching Data from MySQL
-- The generated query is validated for security (prevent SQL injection).
-- The Laravel backend executes the query on MySQL.
+### 3️⃣ Query Execution
+- Generated SQL query is cleaned and validated
+- Laravel executes the query on MySQL database
+- Results are formatted and returned to frontend
 
-### 4️⃣ Returning Data
-- The results are sent back to the React frontend.
-- The frontend displays the results in:
-  - ✅ Tables (e.g., product names, sales data)
-  - ✅ Charts (Bar, Line, Pie - using Chart.js or Recharts)
+### 4️⃣ Data Visualization
+- Results displayed in interactive tables
+- Automatic chart generation using Recharts
+- Support for various chart types based on data
 
-### 5️⃣ Real-Time Updates
-- If data is updated, WebSockets push real-time updates.
+## 🛠️ Technical Stack
+
+### Backend (Laravel)
+- Laravel 10.x
+- Laravel Sanctum for authentication
+- MySQL database
+- Custom DatabaseSchemaHelper for schema management
+
+### AI Service (FastAPI)
+- FastAPI with Python 3.8+
+- OpenAI GPT-4 integration
+- Pydantic for request/response validation
+- CORS middleware enabled
+
+### Frontend (React)
+- React with TypeScript
+- Material-UI components
+- Recharts for data visualization
+- Axios for API communication
+
+## 📦 Installation
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd <project-folder>
+```
+
+### 2. Backend Setup
+```bash
+# Install PHP dependencies
+composer install
+
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+
+# Run migrations
+php artisan migrate
+
+# Install Node.js dependencies
+npm install
+```
+
+### 3. AI Service Setup
+```bash
+# Create Python virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Add your OpenAI API key to .env
+```
+
+### 4. Environment Configuration
+
+#### Laravel (.env)
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+FASTAPI_URL=http://localhost:8000
+```
+
+#### FastAPI (.env)
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+## 🚀 Running the Application
+
+1. Start Laravel Development Server:
+```bash
+php artisan serve
+```
+
+2. Start Vite Development Server:
+```bash
+npm run dev
+```
+
+3. Start FastAPI Server:
+```bash
+cd ai-service
+uvicorn main:app --reload
+```
+
+## 🔒 Authentication
+
+The system uses Laravel Sanctum for API authentication:
+- Register: POST /api/register
+- Login: POST /api/login
+- Logout: POST /api/logout
+- Protected routes require Bearer token
+
+## 📝 API Endpoints
+
+### Authentication
+- POST `/api/register` - Register new user
+- POST `/api/login` - User login
+- POST `/api/logout` - User logout
+
+### Query Processing
+- POST `/api/query` - Process natural language query
+  - Requires authentication
+  - Accepts natural language query
+  - Returns SQL results and visualization data
+
+## 🎯 Features
+
+- ✅ Natural Language Query Processing
+- ✅ Real Database Schema Integration
+- ✅ Automatic SQL Query Generation
+- ✅ Interactive Data Visualization
+- ✅ User Authentication
+- ✅ Error Handling
+- ✅ Query Validation
+- ✅ Response Formatting
+
+## 🔍 Development Notes
+
+- The system automatically detects and uses your database schema
+- SQL queries are generated based on actual table and column names
+- Responses include both data and the generated SQL query
+- Error handling includes detailed logging
+- Frontend includes loading states and error messages
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
 
 ---
 
-## 🔧 Implementation Steps
+🌟 **Star this repository if you find it helpful!**
 
-### 🟢 Backend (Laravel)
-- Set up Laravel API (Sanctum for auth, controllers for processing queries).
-- Create API Endpoint (`/api/query`) to receive user input.
-- Send request to FastAPI via HTTP (Laravel’s HTTP Client).
-- Validate & execute SQL queries securely.
-- Return data to frontend in JSON format.
-- Implement WebSockets (Broadcasting with Pusher).
-
-### 🟢 AI-Powered Query Processing (FastAPI)
-- Receive user query from Laravel.
-- Use OpenAI API to convert natural language → SQL.
-- Return SQL query to Laravel.
-
-### 🟢 Frontend (React)
-- Create query input box for user questions.
-- Send query to Laravel API and wait for response.
-- Display data in tables/charts.
-- Listen for WebSocket updates to refresh data automatically.
-
----
-
-## 🛠️ Technologies Used
-- **Backend:** Laravel (PHP), Sanctum (Auth), HTTP Client, WebSockets (Pusher)
-- **AI Processing:** FastAPI (Python), OpenAI API
-- **Database:** MySQL
-- **Frontend:** React.js, Chart.js/Recharts for visualization
-
-## 📌 Installation & Setup
-1. Clone the repository.
-2. Set up Laravel backend:
-   ```sh
-   cd backend
-   composer install
-   php artisan migrate
-   php artisan serve
-   ```
-3. Set up FastAPI microservice:
-   ```sh
-   cd ai-service
-   pip install -r requirements.txt
-   uvicorn main:app --reload
-   ```
-4. Set up React frontend:
-   ```sh
-   cd frontend
-   npm install
-   npm start
-   ```
-
-## 🔗 API Endpoints
-- `POST /api/query` - Process user query and return SQL results.
-- `GET /api/realtime` - WebSocket endpoint for real-time updates.
-
-## 📜 License
-MIT License
-
----
-
-🎯 **Contributions are welcome!** Feel free to open issues or submit PRs. 🚀
+For questions or issues, please open an issue in the repository.
