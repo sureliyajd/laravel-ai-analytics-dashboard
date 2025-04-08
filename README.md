@@ -29,7 +29,6 @@ A natural language to SQL query converter using Laravel, FastAPI, and OpenAI.
 
 ### Backend (Laravel)
 - Laravel 10.x
-- Laravel Sanctum for authentication
 - MySQL database
 - Custom DatabaseSchemaHelper for schema management
 
@@ -122,24 +121,10 @@ cd ai-service
 uvicorn main:app --reload
 ```
 
-## 🔒 Authentication
-
-The system uses Laravel Sanctum for API authentication:
-- Register: POST /api/register
-- Login: POST /api/login
-- Logout: POST /api/logout
-- Protected routes require Bearer token
-
 ## 📝 API Endpoints
-
-### Authentication
-- POST `/api/register` - Register new user
-- POST `/api/login` - User login
-- POST `/api/logout` - User logout
 
 ### Query Processing
 - POST `/api/query` - Process natural language query
-  - Requires authentication
   - Accepts natural language query
   - Returns SQL results and visualization data
 
@@ -149,7 +134,6 @@ The system uses Laravel Sanctum for API authentication:
 - ✅ Real Database Schema Integration
 - ✅ Automatic SQL Query Generation
 - ✅ Interactive Data Visualization
-- ✅ User Authentication
 - ✅ Error Handling
 - ✅ Query Validation
 - ✅ Response Formatting
